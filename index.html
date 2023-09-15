@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <!-- Give the page a title -->
+    <title>BTAA Map Gallery Test</title>
+    
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- Add a link to normalize.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+    <!-- Add fonts -->
+    <link href='https://fonts.googleapis.com/css2?family=Imprima' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis" rel="stylesheet" type="text/css"> 
+    <!-- All the CSS code goes inside the style tags below -->    
+    <style> 
+    body {
+      background: #f5f5f5;
+      font-family: Imprima, sans-serif;
+    }
+
+    header {
+      width: 100%;
+      min-width: 800px;
+      margin: 0 auto;
+      background: steelblue;
+      padding: 15px 0 20px;
+    }
+
+    h1 {
+      font-family: Dosis, sans-serif;
+      color: #375671;
+      width: 80%;
+      margin: 0 auto;
+      color: whitesmoke;
+    }
+
+    h2 {
+      font-family: Dosis, sans-serif;
+      color: #375671;
+      width: 80%;
+      margin: 0 auto;
+      color: whitesmoke;
+    }
+
+    h3 {
+      font-family: Dosis, sans-serif;
+      color: #003d71
+    }
+
+    h4 {
+      font-family: Dosis, sans-serif;
+      font-size: 1em;
+      color: #003d71
+    }
+
+    p {
+      font-size: .9em;
+      color: #375671;
+    }
+
+    ul {
+      list-style-type: none;
+      font-size: .9em;
+      color: #375671;
+      line-height: 1.6em;
+    }
+
+    a,
+    a:visited {
+      color: #003d71;
+    }
+
+    .project {
+      width: 80%;
+      min-width: 800px;
+      height: 100%;
+      margin: 35px auto;
+    }
+
+    .project:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .project-image {
+      width: 388px;
+      height: 240px;
+      background: white;
+      float: left;
+      margin-right: 20px;
+      border: 2px solid #dddddd;
+      object-fit: cover;
+    }    
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Maps Gallery</h1>
+        <h2>BTAA GIN Conference, 2022</h2>
+      </header>    
+      <!-- Papaparse for bringing in Google spreadsheet data -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js "></script>
+      <!-- Add a link to the jQuery JavaScript library so you can leverage ajax methods to load your data -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <!-- Custom JavaScript below -->
+      <script>  
+
+        // Output the google sheet data at 'https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/edit#gid=944023564' as a csv and parse
+        Papa.parse('https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/export?format=csv&id=1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA&gid=944023564', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                // Define data
+                let data = results.data;
+                // Loop through data
+                for (let i = 0; i < data.length; i++) {
+                  // Define variables
+                  let project = data[i];
+                  let projectImage = project.image;
+                  let projectTitle = project.title;
+                  let projectAuthor = project.name;
+                  let otherAuthors = project.other_authors;
+                  // if there are other authors, add them to the author string
+                  if (otherAuthors) {
+                    projectAuthor = projectAuthor + ', ' + otherAuthors;
+                  };
+                  let projectDescription = project.abstract;
+                  let projectLink = project.link;
+                  // Create HTML elements
+                  let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><img src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><ul><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></ul></section>';
+                  // Append HTML elements to the page
+                  $('body').append(projectHTML);
+                }
+            }
+        });
+  
+      </script> 
+
+</body>
