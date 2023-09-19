@@ -10,13 +10,12 @@
     <!-- Add a link to normalize.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     <!-- Add fonts -->
-    <link href='https://fonts.googleapis.com/css2?family=Imprima' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css2?family=Dosis" rel="stylesheet" type="text/css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Imprima&family=Libre+Franklin&display=swap" rel="stylesheet"> 
     <!-- All the CSS code goes inside the style tags below -->    
     <style> 
     body {
       background: #f5f5f5;
-      font-family: Imprima, sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
     }
 
     header {
@@ -28,7 +27,7 @@
     }
 
     h1 {
-      font-family: Dosis, sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       color: #375671;
       width: 80%;
       margin: 0 auto;
@@ -36,7 +35,7 @@
     }
 
     h2 {
-      font-family: Dosis, sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       color: #375671;
       width: 80%;
       margin: 0 auto;
@@ -44,12 +43,12 @@
     }
 
     h3 {
-      font-family: Dosis, sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       color: #003d71
     }
 
     h4 {
-      font-family: Dosis, sans-serif;
+      font-family: 'Libre Franklin', sans-serif;
       font-size: 1em;
       color: #003d71
     }
@@ -57,13 +56,17 @@
     p {
       font-size: .9em;
       color: #375671;
+      /* ensure this is left-aligned to the right of the project-image */
+      margin-left: 412px;
     }
 
-    ul {
+    li {
       list-style-type: none;
       font-size: .9em;
       color: #375671;
       line-height: 1.6em;
+      /* ensure this is left-aligned to the right of the project-image */
+      margin-left: 412px;
     }
 
     a,
@@ -107,13 +110,17 @@
       <!-- Custom JavaScript below -->
       <script>  
 
-        // Output the google sheet data at 'https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/edit#gid=944023564' as a csv and parse
-        Papa.parse('https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/export?format=csv&id=1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA&gid=944023564', {
+        // Output the google sheet data at 'https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/edit#gid=1122313144' as a csv and parse
+        Papa.parse('https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/export?format=csv&id=1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA&gid=1122313144', {
             download: true,
             header: true,
             complete: function(results) {
                 // Define data
                 let data = results.data;
+                
+                // Flag to track if "Static Maps" has been added
+                let staticMapsAdded = false; 
+
                 // Loop through data
                 for (let i = 0; i < data.length; i++) {
                   // Define variables
@@ -129,10 +136,22 @@
                   let projectDescription = project.abstract;
                   let projectLink = project.link;
                   // Create HTML elements
-                  let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><img src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><ul><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></ul></section>';
+                  let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
                   // Append HTML elements to the page
                   $('body').append(projectHTML);
-                }
+
+                  console.log(project.kind);
+
+                  // Check if project.kind includes "Static" and "Static Maps" has not been added yet
+                  if (project.kind.includes("Static") && !staticMapsAdded) {
+                    // Prepend "Static Maps" to the top of the first project that includes "Static"
+                    $('section').prepend('<h3>Static Maps</h3>');
+
+                    // Set the flag to true to indicate that "Static Maps" has been added
+                    staticMapsAdded = true;
+                  }
+                };
+
             }
         });
   
