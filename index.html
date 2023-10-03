@@ -142,9 +142,10 @@
     <div class="dropdown">
       <label for="year">Select Map Gallery Year:</label>
       <select id="year">
-        <option value="2020">2020</option>
+        <!-- Make the default value 2022 -->
+        <option value="2022" selected>2022</option>
         <option value="2021">2021</option>
-        <option value="2022">2022</option>
+        <option value="2020">2020</option>
       </select>
     </div>
   </header>
@@ -157,7 +158,22 @@
       <!-- Add a link to the jQuery JavaScript library so you can leverage ajax methods to load your data -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <!-- Custom JavaScript below -->
-      <script>  
+      <script> 
+/*      
+        // Get a reference to the <select> element
+        let selectElement = document.getElementById("year");
+
+        // Add an event listener to the <select> element
+        selectElement.addEventListener("change", function() {
+          // This function will be called when the selection changes
+          let selectedValue = selectElement.value; // Get the selected value
+          console.log("Selected year: " + selectedValue);
+
+          // You can perform any action you want here based on the selected value
+          // For example, you can update a map gallery based on the selected year.
+        });
+*/
+
 
         // Output the google sheet data at 'https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/edit#gid=1122313144' as a csv and parse
         Papa.parse('https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/export?format=csv&id=1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA&gid=1122313144', {
@@ -178,6 +194,7 @@
                   let projectTitle = project.title;
                   let projectAuthor = project.name;
                   let otherAuthors = project.other_authors;
+                  console.log(projectImage);
                   // if there are other authors, add them to the author string
                   if (otherAuthors) {
                     projectAuthor = projectAuthor + ', ' + otherAuthors;
@@ -188,7 +205,7 @@
                   // If the project is an interactive map, add it to the page
                   if (project.kind.includes('Interactive Map')) {
                     // Create HTML elements
-                    let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
+                    let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" referrerpolicy="no-referrer" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
                     // Append HTML elements to interactive div
                     $('#interactive').append(projectHTML);
                     //$('body').append(projectHTML);
@@ -197,7 +214,7 @@
                   // If the project is a static map, add it to the page
                   if (project.kind.includes('Static')) {
                     // Create HTML elements
-                    let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
+                    let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" referrerpolicy="no-referrer" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
                     // Append HTML elements to static div
                     $('#static').append(projectHTML);
                   };
