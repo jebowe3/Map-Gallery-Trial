@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <!-- Give the page a title -->
-    <title>BTAA Map Gallery Test</title>
-    
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <!-- Add a link to normalize.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-    <!-- Add fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Imprima&family=Libre+Franklin&display=swap" rel="stylesheet"> 
-    <!-- All the CSS code goes inside the style tags below -->    
-    <style> 
+  <meta charset="utf-8" />
+  <!-- Give the page a title -->
+  <title>BTAA Map Gallery Test</title>
+
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <!-- Add a link to normalize.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+  <!-- Add fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Imprima&family=Libre+Franklin&display=swap" rel="stylesheet">
+  <!-- All the CSS code goes inside the style tags below -->
+  <style>
     body {
       background: #f5f5f5;
       font-family: 'Libre Franklin', sans-serif;
@@ -25,9 +25,12 @@
       background: steelblue;
       padding: 15px 0 20px;
       display: flex;
-      justify-content: space-between; /* Push h1 and h2 to the left and right edges */
-      align-items: center; /* Vertically center content */
-      flex-wrap: wrap; /* Allow items to wrap to the next line if needed */
+      justify-content: space-between;
+      /* Push h1 and h2 to the left and right edges */
+      align-items: center;
+      /* Vertically center content */
+      flex-wrap: wrap;
+      /* Allow items to wrap to the next line if needed */
     }
 
     h1 {
@@ -123,7 +126,8 @@
       color: whitesmoke;
       font-size: 16px;
       text-align: right;
-      margin-right: 10px; /* Add spacing between label and select */
+      margin-right: 10px;
+      /* Add spacing between label and select */
     }
 
     select {
@@ -132,9 +136,9 @@
       height: auto;
       margin-right: 0px;
     }
-
-    </style>
+  </style>
 </head>
+
 <body>
   <header>
     <h1>Map Gallery</h1>
@@ -149,81 +153,93 @@
       </select>
     </div>
   </header>
-    <h5>Interactive Maps</h5>
-    <div id="interactive"></div>
-    <h5>Static Maps</h5>
-    <div id="static"></div>    
-      <!-- Papaparse for bringing in Google spreadsheet data -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js "></script>
-      <!-- Add a link to the jQuery JavaScript library so you can leverage ajax methods to load your data -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <!-- Custom JavaScript below -->
-      <script> 
-/*      
-        // Get a reference to the <select> element
-        let selectElement = document.getElementById("year");
+  <h5>Interactive Maps</h5>
+  <div id="interactive"></div>
+  <h5>Static Maps</h5>
+  <div id="static"></div>
+  <!-- Papaparse for bringing in Google spreadsheet data -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js "></script>
+  <!-- Add a link to the jQuery JavaScript library so you can leverage ajax methods to load your data -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Custom JavaScript below -->
 
-        // Add an event listener to the <select> element
-        selectElement.addEventListener("change", function() {
-          // This function will be called when the selection changes
-          let selectedValue = selectElement.value; // Get the selected value
-          console.log("Selected year: " + selectedValue);
+  <script>
+    function loadGoogleSheetData(year) {
+      let gsheet;
 
-          // You can perform any action you want here based on the selected value
-          // For example, you can update a map gallery based on the selected year.
-        });
-*/
+      if (year == 2022) {
+        gsheet = 'https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/export?format=csv&id=1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA&gid=1122313144';
+      } else if (year == 2021) {
+        gsheet = 'https://docs.google.com/spreadsheets/d/1rvCekjI3xqJhp0ov5NRXptzqJj_9QqaekUY0KWXp5oI/export?format=csv&id=1rvCekjI3xqJhp0ov5NRXptzqJj_9QqaekUY0KWXp5oI&gid=443168613';
+      } else if (year == 2020) {
+        // Handle other years if needed
+      }
 
+      console.log(gsheet);
 
-        // Output the google sheet data at 'https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/edit#gid=1122313144' as a csv and parse
-        Papa.parse('https://docs.google.com/spreadsheets/d/1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA/export?format=csv&id=1bOozMAKPf0nmgq2yk705u2qNV3bvHevo9S1_7YAxyTA&gid=1122313144', {
-            download: true,
-            header: true,
-            complete: function(results) {
-                // Define data
-                let data = results.data;
-                
-                // Flag to track if "Static Maps" has been added
-                let staticMapsAdded = false; 
+      // Clear the interactive and static divs
+      $('#interactive').empty();
+      $('#static').empty();
 
-                // Loop through data
-                for (let i = 0; i < data.length; i++) {
-                  // Define variables
-                  let project = data[i];
-                  let projectImage = project.image;
-                  let projectTitle = project.title;
-                  let projectAuthor = project.name;
-                  let otherAuthors = project.other_authors;
-                  console.log(projectImage);
-                  // if there are other authors, add them to the author string
-                  if (otherAuthors) {
-                    projectAuthor = projectAuthor + ', ' + otherAuthors;
-                  };
-                  let projectDescription = project.abstract;
-                  let projectLink = project.link;
+      Papa.parse(gsheet, {
+        download: true,
+        header: true,
+        complete: function (results) {
+          // Define data
+          let data = results.data;
 
-                  // If the project is an interactive map, add it to the page
-                  if (project.kind.includes('Interactive Map')) {
-                    // Create HTML elements
-                    let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" referrerpolicy="no-referrer" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
-                    // Append HTML elements to interactive div
-                    $('#interactive').append(projectHTML);
-                    //$('body').append(projectHTML);
-                  };
+          // Flag to track if "Static Maps" has been added
+          let staticMapsAdded = false;
 
-                  // If the project is a static map, add it to the page
-                  if (project.kind.includes('Static')) {
-                    // Create HTML elements
-                    let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><embed src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" referrerpolicy="no-referrer" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
-                    // Append HTML elements to static div
-                    $('#static').append(projectHTML);
-                  };
+          // Loop through data
+          for (let i = 0; i < data.length; i++) {
+            // Define variables
+            let project = data[i];
+            let projectImage = project.image;
+            let projectTitle = project.title;
+            let projectAuthor = project.name;
+            let otherAuthors = project.other_authors;
 
-                };
+            // if there are other authors, add them to the author string
+            if (otherAuthors) {
+              projectAuthor = projectAuthor + ', ' + otherAuthors;
+            };
+            let projectDescription = project.abstract;
+            let projectLink = project.link;
 
-            }
-        });
+            // If the project is an interactive map, add it to the page
+            if (project.kind.includes('Interactive Map')) {
+              // Create HTML elements
+              let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><img src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
+              // Append HTML elements to interactive div
+              $('#interactive').append(projectHTML);
+              //$('body').append(projectHTML);
+            };
 
-      </script> 
+            // If the project is a static map, add it to the page
+            if (project.kind.includes('Static')) {
+              // Create HTML elements
+              let projectHTML = '<section class="project"><a target="_blank" href="' + projectLink + '"><img src="' + projectImage + '" alt="' + projectTitle + '" class="project-image" /></a><h3>' + projectTitle + '</h3><h4>' + projectAuthor + '</h4><p>' + projectDescription + '</p><li>See the map: <a target="_blank" href="' + projectLink + '">' + projectTitle + '</a></li></section>';
+              // Append HTML elements to static div
+              $('#static').append(projectHTML);
+            };
+
+          };
+
+        }
+      });
+    };
+
+    // Call the function to load data for the year 2022 when the page loads
+    $(document).ready(function () {
+      loadGoogleSheetData(2022);
+    });
+
+    // Add an event listener to the <select> element for future changes
+    let selectElement = document.getElementById("year");
+    selectElement.addEventListener("change", function () {
+      loadGoogleSheetData(parseInt(selectElement.value));
+    });
+  </script>
 
 </body>
