@@ -168,6 +168,7 @@
 
   <script>
     function loadGoogleSheetData(year) {
+
       let gsheet;
 
       if (year == 2022) {
@@ -235,6 +236,8 @@
 
     // Call the function to load data for the year 2022 when the page loads
     $(document).ready(function () {
+      // Set the default year to 2022 in the dropdown
+      $('#year').val(2022);
       loadGoogleSheetData(2022);
     });
 
